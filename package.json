@@ -1,0 +1,47 @@
+{
+  "name": "grunt-nunit-runner",
+  "version": "1.0.0",
+  "description": "grunt plugin for running nunit",
+  "homepage": "https://github.com/mikeobrien/grunt-nunit-runner",
+  "main": "tasks/task.js",
+  "bugs": {
+    "url": "https://github.com/mikeobrien/grunt-nunit-runner/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mikeobrien/grunt-nunit-runner.git"
+  },
+  "keywords": [
+    "gruntplugin",
+    "grunt",
+    ".net",
+    "dotnet",
+    "nunit"
+  ],
+  "scripts": {
+    "test": "grunt"
+  },
+  "author": "Mike O'Brien",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "files": [
+    "tasks/**/*.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "expect.js": "~0.2.0",
+    "grunt-contrib-jshint": "~0.7.2",
+    "grunt-release": "~0.6.0",
+    "mocha": "~1.15.1",
+    "grunt-mocha-test": "~0.8.1",
+    "rewire": "~2.0.0",
+    "temp": "~0.6.0",
+    "sinon": "~1.7.3",
+    "underscore": "~1.5.2"
+  },
+  "peerDependencies": {
+    "grunt": "0.4.x"
+  }
+}
