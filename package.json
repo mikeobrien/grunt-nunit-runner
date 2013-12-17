@@ -30,7 +30,8 @@
     "LICENSE"
   ],
   "dependencies": {
-    "underscore": "~1.5.2"
+    "underscore": "~1.5.2",
+    "temp": "~0.6.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

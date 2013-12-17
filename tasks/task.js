@@ -1,10 +1,18 @@
 var path = require('path'),
+    temp = require('temp'),
     process = require('child_process'),
     nunit = require('../tasks/nunit.js');
 
 module.exports = function(grunt) {
     grunt.registerTask('nunit', 'Runs the NUnit test runner.', function() {
         var options = this.options();
+        var cleanup;
+
+        if (!options.result && options.teamcity) {
+            temp.track();
+            options.result = temp.path({ suffix: '.xml' });
+            cleanup = temp.cleanup;
+        }
 
         console.log();
         console.log('NUnit Task Runner');
@@ -22,18 +30,17 @@ module.exports = function(grunt) {
         console.log();
 
         var taskComplete = this.async();
-        var nunitProcess = process.spawn(command.path, command.args);
+        var nunitProcess = process.spawn(command.path, command.args, { windowsVerbatimArguments: true });
 
-        nunitProcess.stdout.on('data', function (data) {
-            console.log('stdout: ' + data);
-        });
+        var log = function(message) { console.log(message.toString('utf8')); };
 
-        nunitProcess.stderr.on('data', function (data) {
-            console.log('stderr: ' + data);
-        });
+        nunitProcess.stdout.on('data', log);
+        nunitProcess.stderr.on('data', log);
 
         nunitProcess.on('exit', function (code) {
-            console.log('child process exited with code ' + code);
+            if (options.teamcity) console.log(nunit.toTeamcityLog(options.result));
+            if (code > 0) grunt.fail.fatal('Tests failed.');
+            if (cleanup) cleanup();
             taskComplete();
         });      
     });

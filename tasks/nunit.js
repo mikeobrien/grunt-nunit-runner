@@ -67,3 +67,16 @@ exports.buildCommand = function(files, options) {
         args: args
     };
 };
+
+// this.TEST_IGNORED  = '##teamcity[testIgnored name=\'%s\']';
+//  this.SUITE_START   = '##teamcity[testSuiteStarted name=\'%s\']';
+//  this.SUITE_END     = '##teamcity[testSuiteFinished name=\'%s\']';
+//  this.TEST_START    = '##teamcity[testStarted name=\'%s\']';
+//  this.TEST_FAILED   = '##teamcity[testFailed name=\'%s\' message=\'FAILED\' details=\'%s\']';
+//  this.TEST_END      = '##teamcity[testFinished name=\'%s\' duration=\'%s\']';
+//  this.BLOCK_OPENED  = '##teamcity[blockOpened name=\'%s\']';
+//  this.BLOCK_CLOSED  = '##teamcity[blockClosed name=\'%s\']';
+
+exports.toTeamcityLog = function(results) {
+    return 'oh hai';
+};

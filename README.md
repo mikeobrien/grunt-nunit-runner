@@ -38,6 +38,9 @@ nunit: {
                 'src/Tests/Tests.csproj', 
                 'src/Tests/bin/Debug/Tests.dll'],
 
+        // Integrate test output with TeamCity.
+        teamcity: true|false,
+
         // The options below map directly to the NUnit console runner. See here
         // for more info: http://www.nunit.org/index.php?p=consoleCommandLine&r=2.6.3
 
