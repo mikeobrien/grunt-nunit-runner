@@ -24,15 +24,15 @@ module.exports = function(grunt) {
         var taskComplete = this.async();
         var nunitProcess = process.spawn(command.path, command.args);
 
-        ls.stdout.on('data', function (data) {
+        nunitProcess.stdout.on('data', function (data) {
             console.log('stdout: ' + data);
         });
 
-        ls.stderr.on('data', function (data) {
+        nunitProcess.stderr.on('data', function (data) {
             console.log('stderr: ' + data);
         });
 
-        ls.on('exit', function (code) {
+        nunitProcess.on('exit', function (code) {
             console.log('child process exited with code ' + code);
             taskComplete();
         });      
