@@ -22,6 +22,7 @@ exports.getProjectInfo = function(projectPath) {
         (outputType === 'Library' ? '.dll' : '.exe');
 
     return {
+        path: projectPath,
         references: regex.matchAll(/<Reference .*?Include\s*=\s*\"(.*?)\".*?>/g, project),
         output: _.uniq(regex.matchAll(/<OutputPath.*?>(.*?)<\/OutputPath>/g, project)).
             map(function(assemblyPath) { return path.normalize(path.join(projectDirectory, 
