@@ -1,7 +1,9 @@
 var fs = require('fs'),
     path = require('path'),
     _ = require('underscore'),
-    msbuild = require('./msbuild.js');
+    msbuild = require('./msbuild.js'),
+    XmlStream = require('xml-stream'),
+    Q = require("q");
 
 exports.findTestAssemblies = function(files) {
     var assemblies = [];
@@ -68,15 +70,79 @@ exports.buildCommand = function(files, options) {
     };
 };
 
-// this.TEST_IGNORED  = '##teamcity[testIgnored name=\'%s\']';
 //  this.SUITE_START   = '##teamcity[testSuiteStarted name=\'%s\']';
 //  this.SUITE_END     = '##teamcity[testSuiteFinished name=\'%s\']';
+
+// this.TEST_IGNORED  = '##teamcity[testIgnored name=\'%s\']';
+
 //  this.TEST_START    = '##teamcity[testStarted name=\'%s\']';
 //  this.TEST_FAILED   = '##teamcity[testFailed name=\'%s\' message=\'FAILED\' details=\'%s\']';
 //  this.TEST_END      = '##teamcity[testFinished name=\'%s\' duration=\'%s\']';
+
 //  this.BLOCK_OPENED  = '##teamcity[blockOpened name=\'%s\']';
 //  this.BLOCK_CLOSED  = '##teamcity[blockClosed name=\'%s\']';
 
 exports.toTeamcityLog = function(results) {
-    return 'oh hai';
+    var log = [];
+    var assembly;
+    var fixture = [];
+    var namespace = [];
+    var suite = [];
+    var xml = new XmlStream(fs.createReadStream(results));
+
+    var currentSuite = function() {
+        return assembly + ': ' + namespace.join('.');
+    };
+
+    xml.on('startElement: test-suite', function(item) {
+        switch (item.$.type) {
+            case 'Assembly': suite.push(path.basename(item.$.name.replace(/\\/g, path.sep))); break;
+            case 'Namespace':
+            case 'TestFixture':
+            case 'GenericFixture':
+            case 'ParameterizedFixture':
+            case 'ParameterizedTest':
+                suite.push(item.$.name);
+        }
+        log.push('##teamcity[testSuiteStarted name=\'' + _.last(suite) + '\']');
+
+        //switch (item.$.type) {
+        //    case 'Assembly': assembly = path.basename(item.$.name.replace(/\\/g, path.sep)); break;
+        //    case 'Namespace': namespace.push(item.$.name); break;
+        //    case 'TestFixture':
+        //    case 'GenericFixture':
+        //    case 'ParameterizedFixture':
+        //    case 'ParameterizedTest':
+        //        if (!fixture.length) log.push('Running test suite: ' + currentSuite());
+        //        fixture.push(item.$.name);
+        //}
+    });
+
+    var testCase;
+    var testCaseDuration;
+    var testExecuted;
+
+    xml.on('startElement: test-case', function(item) {
+        testCase = item.$.name;
+        testCaseDuration = item.$.time;
+        testExecuted = item.$.executed;
+        log.push('##teamcity[testStarted name=\'' + testCase + '\']');
+    });
+
+    xml.on('endElement: test-case', function(item) {
+        log.push('##teamcity[testFinished name=\'' + testCase + '\'' +
+            (testExecuted === 'True' ? ' duration=\'' + parseInt(testCaseDuration.replace(/[\.\:]/g, '')) + '\'' : '') + 
+            ']');
+    });
+
+    xml.on('endElement: test-suite', function(item) {
+        log.push('##teamcity[testSuiteStarted name=\'' + suite.pop() + '\']');
+
+        //if (fixture.length) fixture.pop();
+        //else namespace.pop();
+    });
+
+    var complete = Q.defer();
+    xml.on('end', function() { complete.resolve(log); });
+    return complete.promise;
 };

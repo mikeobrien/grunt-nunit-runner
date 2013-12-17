@@ -1,4 +1,5 @@
 var expect = require('expect.js'),
+    fs = require('fs'),
     nunit = require('../tasks/nunit.js');
 
 describe('nunit', function() {
@@ -120,6 +121,15 @@ describe('nunit', function() {
         expect(command.args[1]).to.be('"path/to/file2.dll"');
         expect(command.args[2]).to.be('/config:"Debug"');
         expect(command.args[3]).to.be('/result:"TestResult.xml"');
+
+    });
+
+    it('should generate TeamCity service messages', function(done) {
+
+        nunit.toTeamcityLog('test/Data/TestResults.xml').then(function(log) {
+            console.log(log);
+            done();
+        });
 
     });
 

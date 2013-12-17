@@ -31,7 +31,9 @@
   ],
   "dependencies": {
     "underscore": "~1.5.2",
-    "temp": "~0.6.0"
+    "temp": "~0.6.0",
+    "q": "~0.9.7",
+    "xml-stream": "~0.4.3"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
