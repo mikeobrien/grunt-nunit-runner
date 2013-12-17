@@ -29,6 +29,9 @@
     "README.md",
     "LICENSE"
   ],
+  "dependencies": {
+    "underscore": "~1.5.2"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "expect.js": "~0.2.0",
@@ -38,8 +41,7 @@
     "grunt-mocha-test": "~0.8.1",
     "rewire": "~2.0.0",
     "temp": "~0.6.0",
-    "sinon": "~1.7.3",
-    "underscore": "~1.5.2"
+    "sinon": "~1.7.3"
   },
   "peerDependencies": {
     "grunt": "0.4.x"
