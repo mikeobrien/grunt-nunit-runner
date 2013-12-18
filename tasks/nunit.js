@@ -69,35 +69,20 @@ exports.buildCommand = function(files, options) {
     };
 };
 
-//  this.SUITE_START   = '##teamcity[testSuiteStarted name=\'%s\']';
-//  this.SUITE_END     = '##teamcity[testSuiteFinished name=\'%s\']';
-
-// this.TEST_IGNORED  = '##teamcity[testIgnored name=\'%s\']';
-
-//  this.TEST_START    = '##teamcity[testStarted name=\'%s\']';
-//  this.TEST_FAILED   = '##teamcity[testFailed name=\'%s\' message=\'FAILED\' details=\'%s\']';
-//  this.TEST_END      = '##teamcity[testFinished name=\'%s\' duration=\'%s\']';
-
-//  this.BLOCK_OPENED  = '##teamcity[blockOpened name=\'%s\']';
-//  this.BLOCK_CLOSED  = '##teamcity[blockClosed name=\'%s\']';
-
-exports.toTeamcityLog = function(results) {
+exports.createTeamcityLog = function(results) {
 
     var parser = sax.parser(true);
     var log = [];
     var ancestors = [];
     var message, stackTrace;
 
-    var getAssemblyName = function(node) { return path.basename(node.attributes.name.replace(/\\/g, path.sep)); };
+    var getSuiteName = function(node) { return node.attributes.type === 'Assembly' ? 
+        path.basename(node.attributes.name.replace(/\\/g, path.sep)) : node.attributes.name; };
 
     parser.onopentag = function (node) {
         ancestors.push(node);
         switch (node.name) {
-            case 'test-suite': 
-                if (node.attributes.type === 'Assembly')
-                    log.push('##teamcity[blockOpened name=\'' + getAssemblyName(node) + '\']'); 
-                else log.push('##teamcity[testSuiteStarted name=\'' + node.attributes.name + '\']'); 
-                break;
+            case 'test-suite': log.push('##teamcity[testSuiteStarted name=\'' + getSuiteName(node) + '\']'); break;
             case 'test-case': 
                 if (node.attributes.executed === 'True') log.push('##teamcity[testStarted name=\'' + node.attributes.name + '\']'); 
                 message = '';
@@ -127,11 +112,7 @@ exports.toTeamcityLog = function(results) {
     parser.onclosetag = function (node) {
         node = ancestors.pop();
         switch (node.name) {
-            case 'test-suite':
-                if (node.attributes.type === 'Assembly')
-                    log.push('##teamcity[blockClosed name=\'' + getAssemblyName(node) + '\']'); 
-                else log.push('##teamcity[testSuiteFinished name=\'' + node.attributes.name + '\']'); 
-                break;
+            case 'test-suite': log.push('##teamcity[testSuiteFinished name=\'' + getSuiteName(node) + '\']'); break;
             case 'test-case': 
                 if (node.attributes.result === 'Ignored')
                     log.push('##teamcity[testIgnored name=\'' + node.attributes.name + '\'' + 

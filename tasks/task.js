@@ -39,7 +39,7 @@ module.exports = function(grunt) {
         nunitProcess.stderr.on('data', log);
 
         nunitProcess.on('exit', function(code) { 
-            if (options.teamcity) console.log(nunit.toTeamcityLog(options.result).join('\r\n'));
+            if (options.teamcity) console.log(nunit.createTeamcityLog(options.result).join(''));
             if (code > 0) grunt.fail.fatal('Tests failed.');
             if (cleanup) cleanup();
             taskComplete();
