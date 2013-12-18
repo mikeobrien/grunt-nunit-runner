@@ -1,8 +1,7 @@
 var path = require('path'),
     temp = require('temp'),
     process = require('child_process'),
-    _ = require('underscore'),
-    nunit = require('../tasks/nunit.js');
+    nunit = require('./nunit.js');
 
 module.exports = function(grunt) {
     grunt.registerTask('nunit', 'Runs the NUnit test runner.', function() {

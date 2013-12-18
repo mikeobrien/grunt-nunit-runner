@@ -1,5 +1,5 @@
-var expect = require('expect.js');
-var regex = require('../tasks/regex.js');
+var expect = require('expect.js'),
+    regex = require('../tasks/regex.js');
 
 describe('regex', function(){
 
