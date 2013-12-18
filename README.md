@@ -18,7 +18,7 @@ grunt.loadNpmTasks('grunt-nunit-runner');
 
 ## Config
 Inside your `Gruntfile.js` file, add a section named `nunit`, containing
-assembly information:
+the test runner configuration:
 
 ```js
 nunit: {
