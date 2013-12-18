@@ -2,8 +2,7 @@ var fs = require('fs'),
     path = require('path'),
     _ = require('underscore'),
     msbuild = require('./msbuild.js'),
-    XmlStream = require('xml-stream'),
-    Q = require("q");
+    sax = require('sax');
 
 exports.findTestAssemblies = function(files) {
     var assemblies = [];
@@ -83,66 +82,75 @@ exports.buildCommand = function(files, options) {
 //  this.BLOCK_CLOSED  = '##teamcity[blockClosed name=\'%s\']';
 
 exports.toTeamcityLog = function(results) {
-    var log = [];
-    var assembly;
-    var fixture = [];
-    var namespace = [];
-    var suite = [];
-    var xml = new XmlStream(fs.createReadStream(results));
 
-    var currentSuite = function() {
-        return assembly + ': ' + namespace.join('.');
+    var parser = sax.parser(true);
+    var log = [];
+    var ancestors = [];
+    var message, stackTrace;
+
+    var getAssemblyName = function(node) { return path.basename(node.attributes.name.replace(/\\/g, path.sep)); };
+
+    parser.onopentag = function (node) {
+        ancestors.push(node);
+        switch (node.name) {
+            case 'test-suite': 
+                if (node.attributes.type === 'Assembly')
+                    log.push('##teamcity[blockOpened name=\'' + getAssemblyName(node) + '\']'); 
+                else log.push('##teamcity[testSuiteStarted name=\'' + node.attributes.name + '\']'); 
+                break;
+            case 'test-case': 
+                if (node.attributes.executed === 'True') log.push('##teamcity[testStarted name=\'' + node.attributes.name + '\']'); 
+                message = '';
+                stackTrace = '';
+                break; 
+        }
     };
 
-    xml.on('startElement: test-suite', function(item) {
-        switch (item.$.type) {
-            case 'Assembly': suite.push(path.basename(item.$.name.replace(/\\/g, path.sep))); break;
-            case 'Namespace':
-            case 'TestFixture':
-            case 'GenericFixture':
-            case 'ParameterizedFixture':
-            case 'ParameterizedTest':
-                suite.push(item.$.name);
+    parser.oncdata = function (data) {
+        data = data.
+            replace(/\|/g, '||').
+            replace(/\'/g, '|\'').
+            replace(/\n/g, '|n').
+            replace(/\r/g, '|r').
+            replace(/\u0085/g, '|x').
+            replace(/\u2028/g, '|l').
+            replace(/\u2029/g, '|p').
+            replace(/\[/g, '|[').
+            replace(/\]/g, '|]');
+
+        switch (_.last(ancestors).name) {
+            case 'message': message += data; break;
+            case 'stack-trace': stackTrace += data; break;
         }
-        log.push('##teamcity[testSuiteStarted name=\'' + _.last(suite) + '\']');
+    };
 
-        //switch (item.$.type) {
-        //    case 'Assembly': assembly = path.basename(item.$.name.replace(/\\/g, path.sep)); break;
-        //    case 'Namespace': namespace.push(item.$.name); break;
-        //    case 'TestFixture':
-        //    case 'GenericFixture':
-        //    case 'ParameterizedFixture':
-        //    case 'ParameterizedTest':
-        //        if (!fixture.length) log.push('Running test suite: ' + currentSuite());
-        //        fixture.push(item.$.name);
-        //}
-    });
+    parser.onclosetag = function (node) {
+        node = ancestors.pop();
+        switch (node.name) {
+            case 'test-suite':
+                if (node.attributes.type === 'Assembly')
+                    log.push('##teamcity[blockClosed name=\'' + getAssemblyName(node) + '\']'); 
+                else log.push('##teamcity[testSuiteFinished name=\'' + node.attributes.name + '\']'); 
+                break;
+            case 'test-case': 
+                if (node.attributes.result === 'Ignored')
+                    log.push('##teamcity[testIgnored name=\'' + node.attributes.name + '\'' + 
+                        (message ? ' message=\'' + message + '\'' : '') + ']'); 
+                else if (node.attributes.executed === 'True') {
+                    if (node.attributes.success === 'False') {
+                        log.push('##teamcity[testFailed name=\'' + node.attributes.name + '\'' +
+                            (message ? ' message=\'' + message + '\'' : '') + 
+                            (stackTrace ? ' details=\'' + stackTrace + '\'' : '') + ']');
+                    }
+                    var duration = node.attributes.time ? ' duration=\'' + parseInt(
+                        node.attributes.time.replace(/[\.\:]/g, '')) + '\'' : '';
+                    log.push('##teamcity[testFinished name=\'' + node.attributes.name + '\'' + duration + ']');
+                }
+                break;
+        }
+    };
 
-    var testCase;
-    var testCaseDuration;
-    var testExecuted;
+    parser.write(fs.readFileSync(results, 'utf8')).close();
 
-    xml.on('startElement: test-case', function(item) {
-        testCase = item.$.name;
-        testCaseDuration = item.$.time;
-        testExecuted = item.$.executed;
-        log.push('##teamcity[testStarted name=\'' + testCase + '\']');
-    });
-
-    xml.on('endElement: test-case', function(item) {
-        log.push('##teamcity[testFinished name=\'' + testCase + '\'' +
-            (testExecuted === 'True' ? ' duration=\'' + parseInt(testCaseDuration.replace(/[\.\:]/g, '')) + '\'' : '') + 
-            ']');
-    });
-
-    xml.on('endElement: test-suite', function(item) {
-        log.push('##teamcity[testSuiteStarted name=\'' + suite.pop() + '\']');
-
-        //if (fixture.length) fixture.pop();
-        //else namespace.pop();
-    });
-
-    var complete = Q.defer();
-    xml.on('end', function() { complete.resolve(log); });
-    return complete.promise;
+    return log;
 };

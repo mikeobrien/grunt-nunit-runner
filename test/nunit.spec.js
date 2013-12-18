@@ -124,12 +124,10 @@ describe('nunit', function() {
 
     });
 
-    it('should generate TeamCity service messages', function(done) {
+    it('should generate TeamCity service messages', function() {
 
-        nunit.toTeamcityLog('test/Data/TestResults.xml').then(function(log) {
-            console.log(log);
-            done();
-        });
+        var log = nunit.toTeamcityLog('test/Data/TestResults.xml');
+        console.log(log);
 
     });
 
