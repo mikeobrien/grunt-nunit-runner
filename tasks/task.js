@@ -1,5 +1,6 @@
 var path = require('path'),
     temp = require('temp'),
+    fs = require('fs'),
     process = require('child_process'),
     nunit = require('./nunit.js');
 
@@ -25,6 +26,11 @@ module.exports = function(grunt) {
         console.log();
         files.forEach(function(file) { console.log('    ' + file); });
         console.log();
+        
+        // make sure that the nunit console exists
+        if ( !fs.existsSync(command.path) ){        
+            grunt.fail.fatal('Unable to find NUnit Console.exe located at ' + command.path);
+        }
 
         console.log(command.path + ' ' + command.args.join(' '));
         console.log();
