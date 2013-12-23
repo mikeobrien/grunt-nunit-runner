@@ -26,7 +26,7 @@ nunit: {
 
         // The path to the NUnit bin folder. If not specified the bin
         // folder must be in the system path.
-        path: 'c:\\Program Files\\NUnit\\bin',
+        path: 'c:/Program Files/NUnit/bin',
 
         // Runs the anycpu or x86 build of NUnit. Default is anycpu. 
         // http://www.nunit.org/index.php?p=nunit-console&r=2.6.3
