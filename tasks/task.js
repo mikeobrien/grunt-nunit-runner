@@ -5,7 +5,7 @@ var path = require('path'),
 
 module.exports = function(grunt) {
     grunt.registerTask('nunit', 'Runs the NUnit test runner.', function() {
-        var options = this.options();
+        var options = this.options({ nodots: true });
         var cleanup;
 
         if (!options.result && options.teamcity) {
