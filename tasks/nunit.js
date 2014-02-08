@@ -27,14 +27,14 @@ exports.findTestAssemblies = function(files) {
     return assemblies;
 };
 
-exports.buildCommand = function(files, options) {
+exports.buildCommand = function(assemblies, options) {
 
     var nunit = options.platform === 'x86' ? 'nunit-console-x86.exe' : 'nunit-console.exe';
     if (options.path) nunit = path.join(options.path, nunit);
 
     nunit = nunit.replace(/\\/g, path.sep);
 
-    var args = files.map(function(file) { return '"' + file + '"'; });
+    var args = assemblies.map(function(assembly) { return '"' + assembly + '"'; });
 
     if (options.run && options.run.length > 0) args.push('/run:"' + options.run.join(',') + '"');
     if (options.runlist) args.push('/runlist:"' + options.runlist + '"');

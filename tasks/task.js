@@ -18,12 +18,12 @@ module.exports = function(grunt) {
         console.log('NUnit Task Runner');
         console.log();
 
-        var files = nunit.findTestAssemblies(options.files);
-        var command = nunit.buildCommand(files, options);
+        var assemblies = nunit.findTestAssemblies(options.files);
+        var command = nunit.buildCommand(assemblies, options);
 
         console.log('Running tests in:');
         console.log();
-        files.forEach(function(file) { console.log('    ' + file); });
+        assemblies.forEach(function(file) { console.log('    ' + file); });
         console.log();
 
         console.log(command.path + ' ' + command.args.join(' '));

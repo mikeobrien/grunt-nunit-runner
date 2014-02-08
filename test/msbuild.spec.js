@@ -83,7 +83,7 @@ describe('msbuild', function() {
         expect(info.references[13]).to.be('FubuMVC.TwitterBootstrap');
         expect(info.references[14]).to.be('HtmlTags');
         expect(info.references[15]).to.be('Microsoft.CSharp');
-        expect(info.references[16]).to.be('Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL');
+        expect(info.references[16]).to.be('Microsoft.Web.Infrastructure');
         expect(info.references[17]).to.be('Spark');
         expect(info.references[18]).to.be('StructureMap');
         expect(info.references[19]).to.be('System.Web.DynamicData');
