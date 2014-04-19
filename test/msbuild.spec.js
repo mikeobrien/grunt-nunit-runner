@@ -1,5 +1,6 @@
 var expect = require('expect.js'),
-    msbuild = require('../tasks/msbuild.js');
+    msbuild = require('../tasks/msbuild.js'),
+    path = require('path');
 
 describe('msbuild', function() {
 
@@ -7,9 +8,9 @@ describe('msbuild', function() {
 
         var projects = msbuild.getSolutionProjects('test/Data/Solution/Solution.sln');
         expect(projects.length).to.be(3);
-        expect(projects[0]).to.be('test/Data/Solution/Project.ClassLibrary.csproj');
-        expect(projects[1]).to.be('test/Data/Solution/Project.WebApplication/Project.WebApplication.csproj');
-        expect(projects[2]).to.be('test/Data/Project.WpfApplication/Project.WpfApplication.csproj');
+        expect(projects[0]).to.be(path.normalize('test/Data/Solution/Project.ClassLibrary.csproj'));
+        expect(projects[1]).to.be(path.normalize('test/Data/Solution/Project.WebApplication/Project.WebApplication.csproj'));
+        expect(projects[2]).to.be(path.normalize('test/Data/Project.WpfApplication/Project.WpfApplication.csproj'));
         
     });
 
@@ -19,8 +20,8 @@ describe('msbuild', function() {
 
         expect(info.output.length).to.be(2);
 
-        expect(info.output[0]).to.be('test/Data/Project.WpfApplication/bin/Debug/Project.WpfApplication.exe');
-        expect(info.output[1]).to.be('test/Data/Project.WpfApplication/bin/Release/Project.WpfApplication.exe');
+        expect(info.output[0]).to.be(path.normalize('test/Data/Project.WpfApplication/bin/Debug/Project.WpfApplication.exe'));
+        expect(info.output[1]).to.be(path.normalize('test/Data/Project.WpfApplication/bin/Release/Project.WpfApplication.exe'));
 
         expect(info.references.length).to.be(11);
         expect(info.references[0]).to.be('System');
@@ -46,8 +47,8 @@ describe('msbuild', function() {
         var info = infos[0];
 
         expect(info.output.length).to.be(2);
-        expect(info.output[0]).to.be('test/Data/Solution/bin/Debug/Project.ClassLibrary.dll');
-        expect(info.output[1]).to.be('test/Data/Solution/bin/Release/Project.ClassLibrary.dll');
+        expect(info.output[0]).to.be(path.normalize('test/Data/Solution/bin/Debug/Project.ClassLibrary.dll'));
+        expect(info.output[1]).to.be(path.normalize('test/Data/Solution/bin/Release/Project.ClassLibrary.dll'));
 
         expect(info.references.length).to.be(10);
         expect(info.references[0]).to.be('NSubstitute');
@@ -64,7 +65,7 @@ describe('msbuild', function() {
         info = infos[1];
 
         expect(info.output.length).to.be(1);
-        expect(info.output[0]).to.be('test/Data/Solution/Project.WebApplication/bin/Project.WebApplication.dll');
+        expect(info.output[0]).to.be(path.normalize('test/Data/Solution/Project.WebApplication/bin/Project.WebApplication.dll'));
 
         expect(info.references.length).to.be(36);
         expect(info.references[0]).to.be('Bottles');
@@ -107,8 +108,8 @@ describe('msbuild', function() {
         info = infos[2];
 
         expect(info.output.length).to.be(2);
-        expect(info.output[0]).to.be('test/Data/Project.WpfApplication/bin/Debug/Project.WpfApplication.exe');
-        expect(info.output[1]).to.be('test/Data/Project.WpfApplication/bin/Release/Project.WpfApplication.exe');
+        expect(info.output[0]).to.be(path.normalize('test/Data/Project.WpfApplication/bin/Debug/Project.WpfApplication.exe'));
+        expect(info.output[1]).to.be(path.normalize('test/Data/Project.WpfApplication/bin/Release/Project.WpfApplication.exe'));
 
         expect(info.references.length).to.be(11);
         expect(info.references[0]).to.be('System');

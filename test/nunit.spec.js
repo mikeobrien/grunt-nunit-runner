@@ -1,6 +1,7 @@
 var expect = require('expect.js'),
     fs = require('fs'),
-    nunit = require('../tasks/nunit.js');
+    nunit = require('../tasks/nunit.js'),
+    path = require('path');
 
 describe('nunit', function() {
 
@@ -8,7 +9,7 @@ describe('nunit', function() {
 
         var assemblies = nunit.findTestAssemblies(['test/Data/Solution/bin/Debug/Project.ClassLibrary.dll']);
         expect(assemblies.length).to.be(1);
-        expect(assemblies[0]).to.be('test/Data/Solution/bin/Debug/Project.ClassLibrary.dll');
+        expect(assemblies[0]).to.be(path.normalize('test/Data/Solution/bin/Debug/Project.ClassLibrary.dll'));
 
     });
 
@@ -24,7 +25,7 @@ describe('nunit', function() {
 
         var assemblies = nunit.findTestAssemblies(['test/Data/Solution/Project.ClassLibrary.csproj']);
         expect(assemblies.length).to.be(1);
-        expect(assemblies[0]).to.be('test/Data/Solution/bin/Debug/Project.ClassLibrary.dll');
+        expect(assemblies[0]).to.be(path.normalize('test/Data/Solution/bin/Debug/Project.ClassLibrary.dll'));
 
     });
 
@@ -40,7 +41,7 @@ describe('nunit', function() {
 
         var assemblies = nunit.findTestAssemblies(['test/Data/Solution/Solution.sln']);
         expect(assemblies.length).to.be(1);
-        expect(assemblies[0]).to.be('test/Data/Solution/bin/Debug/Project.ClassLibrary.dll');
+        expect(assemblies[0]).to.be(path.normalize('test/Data/Solution/bin/Debug/Project.ClassLibrary.dll'));
 
     });
 
@@ -77,7 +78,7 @@ describe('nunit', function() {
             cleanup: true
         });
 
-        expect(command.path).to.be('c:/Program Files/NUnit/bin/nunit-console-x86.exe');
+        expect(command.path).to.be(path.normalize('c:/Program Files/NUnit/bin/nunit-console-x86.exe'));
         expect(command.args[0]).to.be('"path/to/file1.dll"');
         expect(command.args[1]).to.be('"path/to/file2.dll"');
         expect(command.args[2]).to.be('/run:"TestSuite.Unit,TestSuite.Integration"');
