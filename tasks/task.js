@@ -4,7 +4,9 @@ var path = require('path'),
     nunit = require('./nunit.js');
 
 module.exports = function(grunt) {
-    grunt.registerTask('nunit', 'Runs the NUnit test runner.', function() {
+
+    grunt.registerMultiTask('nunit', 'Runs the NUnit test runner.', function() {
+
         var options = this.options({ nodots: true });
         var cleanup;
 
@@ -18,7 +20,7 @@ module.exports = function(grunt) {
         console.log('NUnit Task Runner');
         console.log();
 
-        var assemblies = nunit.findTestAssemblies(options.files);
+        var assemblies = nunit.findTestAssemblies(this.filesSrc);
         var command = nunit.buildCommand(assemblies, options);
 
         console.log('Running tests in:');

@@ -13,7 +13,7 @@ exports.findTestAssemblies = function(files) {
             case '.csproj': projects.push(msbuild.getProjectInfo(file)); break;
             default: {
                 if (!fs.existsSync(file)) throw new Error('Assmebly not found: ' + file);
-                assemblies.push(file);
+                assemblies.push(path.normalize(file));
             }
         }
     });
@@ -22,7 +22,7 @@ exports.findTestAssemblies = function(files) {
         forEach(function(project) {
             var outputs = project.output.filter(function(output) { return fs.existsSync(output); });
             if (outputs.length === 0) throw new Error('No assemblies exist for project: ' + project.path);
-            assemblies.push(outputs[0]);
+            assemblies.push(path.normalize(outputs[0]));
         });
     return assemblies;
 };
