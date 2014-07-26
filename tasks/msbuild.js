@@ -9,6 +9,7 @@ exports.getSolutionProjects = function(solutionPath) {
     var projectRegEx = /Project\s*\(\s*\".*?\"\s*\)\s*=\s*\".*?\"\s*,\s*\"(.*?)\"\s*,\s*\".*?\"/ig;
     var solutionDirectory = path.dirname(solutionPath);
     return regex.matchAll(projectRegEx, fs.readFileSync(solutionPath, 'utf8')).
+        filter(function(projectPath) { return projectPath.indexOf('.csproj', projectPath.length - 7) !== -1; }).
         map(function(projectPath) { return projectPath.replace(/\\/g, path.sep); }).
         map(function(projectPath) { return path.normalize(path.join(solutionDirectory, projectPath)); });
 };
