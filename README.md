@@ -19,21 +19,16 @@ grunt.loadNpmTasks('grunt-nunit-runner');
 ## Config
 Inside your `Gruntfile.js` file, add a section named `nunit`, containing
 the test runner configuration:
-// Can be solutions, projects or individual assemblies. Solutions 
-// are searched for projects referencing nunit.framework.dll.
-files: ['src/MySolution.sln', 
-        'src/Tests/Tests.csproj', 
-        'src/Tests/bin/Debug/Tests.dll'],
-        
+
 ```js
 nunit: {
-    test:{
-        // Can be solutions, projects or individual assemblies. Solutions 
+    test: {
+        // Can be solutions, projects or individual assemblies. Solutions
         // are searched for projects referencing nunit.framework.dll.
-        files:{ 
-            src:[
-                'src/MySolution.sln', 
-                'src/Tests/Tests.csproj', 
+        files: {
+            src: [
+                'src/MySolution.sln',
+                'src/Tests/Tests.csproj',
                 'src/Tests/bin/Debug/Tests.dll'
             ]
         }
@@ -44,7 +39,7 @@ nunit: {
         // folder must be in the system path.
         path: 'c:/Program Files/NUnit/bin',
 
-        // Runs the anycpu or x86 build of NUnit. Default is anycpu. 
+        // Runs the anycpu or x86 build of NUnit. Default is anycpu.
         // http://www.nunit.org/index.php?p=nunit-console&r=2.6.3
         platform: 'anycpu|x86',
 
