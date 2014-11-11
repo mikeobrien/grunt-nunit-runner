@@ -1,4 +1,7 @@
-# grunt-nunit-runner [![Build Status](https://api.travis-ci.org/mikeobrien/grunt-nunit-runner.png?branch=master)](https://travis-ci.org/mikeobrien/grunt-nunit-runner) [![NPM version](https://badge.fury.io/js/grunt-nunit-runner.png)](https://npmjs.org/package/grunt-nunit-runner)
+# grunt-nunit-runner 
+
+[![npm version](http://img.shields.io/npm/v/grunt-nunit-runner.svg)](https://npmjs.org/package/grunt-nunit-runner) [![build status](http://img.shields.io/travis/mikeobrien/grunt-nunit-runner.svg)](https://travis-ci.org/mikeobrien/grunt-nunit-runner)
+
 Grunt plugin for running [NUnit](http://www.nunit.org/).
 NOTE: this plugin requires Grunt 0.4.x.
 
