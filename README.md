@@ -1,6 +1,6 @@
 # grunt-nunit-runner 
 
-[![npm version](http://img.shields.io/npm/v/grunt-nunit-runner.svg)](https://npmjs.org/package/grunt-nunit-runner) [![build status](http://img.shields.io/travis/mikeobrien/grunt-nunit-runner.svg)](https://travis-ci.org/mikeobrien/grunt-nunit-runner) [![Dependency Status](http://img.shields.io/david/mikeobrien/grunt-nunit-runner.svg)](https://david-dm.org/mikeobrien/grunt-nunit-runner) [![npm downloads](http://img.shields.io/npm/dm/grunt-nunit-runner.svg)](https://npmjs.org/package/grunt-nunit-runner)
+[![npm version](http://img.shields.io/npm/v/grunt-nunit-runner.svg?style=flat)](https://npmjs.org/package/grunt-nunit-runner) [![build status](http://img.shields.io/travis/mikeobrien/grunt-nunit-runner.svg?style=flat)](https://travis-ci.org/mikeobrien/grunt-nunit-runner) [![Dependency Status](http://img.shields.io/david/mikeobrien/grunt-nunit-runner.svg?style=flat)](https://david-dm.org/mikeobrien/grunt-nunit-runner) [![npm downloads](http://img.shields.io/npm/dm/grunt-nunit-runner.svg?style=flat)](https://npmjs.org/package/grunt-nunit-runner)
 
 Grunt plugin for running [NUnit](http://www.nunit.org/).
 NOTE: this plugin requires Grunt 0.4.x.
