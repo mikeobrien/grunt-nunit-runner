@@ -20,7 +20,7 @@ module.exports = function(grunt) {
         console.log('NUnit Task Runner');
         console.log();
 
-        var assemblies = nunit.findTestAssemblies(this.filesSrc);
+        var assemblies = nunit.findTestAssemblies(this.filesSrc, options);
         var command = nunit.buildCommand(assemblies, options);
 
         console.log('Running tests in:');
