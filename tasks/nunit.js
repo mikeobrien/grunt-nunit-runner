@@ -12,7 +12,7 @@ exports.findTestAssemblies = function(files, options) {
             case '.sln': projects = projects.concat(msbuild.getSolutionProjectInfo(file)); break;
             case '.csproj': projects.push(msbuild.getProjectInfo(file)); break;
             default: {
-                if (!fs.existsSync(file)) throw new Error('Assmebly not found: ' + file);
+                if (!fs.existsSync(file)) throw new Error('Assembly not found: ' + file);
                 assemblies.push(path.normalize(file));
             }
         }
