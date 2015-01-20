@@ -4,7 +4,7 @@ var fs = require('fs'),
     msbuild = require('./msbuild.js'),
     sax = require('sax');
 
-exports.findTestAssemblies = function(files) {
+exports.findTestAssemblies = function(files, options) {
     var assemblies = [];
     var projects = [];
     files.forEach(function(file) {
@@ -12,7 +12,7 @@ exports.findTestAssemblies = function(files) {
             case '.sln': projects = projects.concat(msbuild.getSolutionProjectInfo(file)); break;
             case '.csproj': projects.push(msbuild.getProjectInfo(file)); break;
             default: {
-                if (!fs.existsSync(file)) throw new Error('Assmebly not found: ' + file);
+                if (!fs.existsSync(file)) throw new Error('Assembly not found: ' + file);
                 assemblies.push(path.normalize(file));
             }
         }
@@ -22,6 +22,14 @@ exports.findTestAssemblies = function(files) {
         forEach(function(project) {
             var outputs = project.output.filter(function(output) { return fs.existsSync(output); });
             if (outputs.length === 0) throw new Error('No assemblies exist for project: ' + project.path);
+            
+            if (options && options.config) {
+                outputs = outputs.filter(function(output) { 
+                    return output.toLowerCase().indexOf(options.config.toLowerCase()) > -1; 
+                });
+            }
+
+            if (outputs.length === 0) throw new Error('No assemblies exist for project matching config parameter: ' + project.path);
             assemblies.push(path.normalize(outputs[0]));
         });
     return assemblies;
