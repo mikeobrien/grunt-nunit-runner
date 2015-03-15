@@ -1,5 +1,5 @@
-exports.wrapCommand = function(command) {
-    var pathToOpencover = 'C:\\src\\moderator\\build\\bin\\opencover\\OpenCover.Console.exe';
+exports.wrapCommand = function(command, options) {
+    var pathToOpencover = options.coverPath;
     var wrappedArgs = [];
     wrappedArgs.push('-target:"' + command.path + '"');
     wrappedArgs.push('-targetargs:"' + command.args.join(' ') + '"');

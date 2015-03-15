@@ -25,7 +25,7 @@ module.exports = function(grunt) {
         var command = nunit.buildCommand(assemblies, options);
         
         if (options.cover) {
-            command = opencover.wrapCommand(command);
+            command = opencover.wrapCommand(command, options);
         }
 
         console.log('Running tests in:');
