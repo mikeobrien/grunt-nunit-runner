@@ -1,7 +1,8 @@
 var path = require('path'),
     temp = require('temp'),
     process = require('child_process'),
-    nunit = require('./nunit.js');
+    nunit = require('./nunit.js'),
+    opencover = require('./opencover.js');
 
 module.exports = function(grunt) {
 
@@ -22,6 +23,10 @@ module.exports = function(grunt) {
 
         var assemblies = nunit.findTestAssemblies(this.filesSrc, options);
         var command = nunit.buildCommand(assemblies, options);
+        
+        if (options.cover) {
+            command = opencover.wrapCommand(command, options);
+        }
 
         console.log('Running tests in:');
         console.log();
@@ -47,7 +52,7 @@ module.exports = function(grunt) {
         });  
 
         nunitProcess.on('error', function(e) { 
-            grunt.fail.fatal(e.code === 'ENOENT' ? 'Unable to find NUnit Console.exe located at ' + command.path : e.message);
+            grunt.fail.fatal(e.code === 'ENOENT' ? 'Unable to find executable located at ' + command.path : e.message);
         });     
     });
 };
