@@ -42,12 +42,16 @@ module.exports = function(grunt) {
         nunitProcess.on('exit', function(code) { 
             if (options.teamcity) console.log(nunit.createTeamcityLog(options.result).join(''));
             if (cleanup) cleanup();
-            if (code > 0) grunt.fail.fatal('Tests failed.');
+            if (code > 0) {
+                grunt.log.error('Tests failed.');
+                taskComplete(false);
+            }
             taskComplete();
         });  
 
         nunitProcess.on('error', function(e) { 
-            grunt.fail.fatal(e.code === 'ENOENT' ? 'Unable to find NUnit Console.exe located at ' + command.path : e.message);
-        });     
+            grunt.log.error(e.code === 'ENOENT' ? 'Unable to find NUnit Console.exe located at ' + command.path : e.message);
+            taskComplete(false);
+        });      
     });
 };
