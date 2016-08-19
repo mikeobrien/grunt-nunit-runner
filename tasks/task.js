@@ -6,8 +6,8 @@ var path = require('path'),
 module.exports = function(grunt) {
 
     grunt.registerMultiTask('nunit', 'Runs the NUnit test runner.', function() {
-
-        var options = this.options({ nodots: true });
+		
+        var options = this.options({ nodots: !this.options().nunit3 });
         var cleanup;
 
         if (!options.result && options.teamcity) {

@@ -42,6 +42,10 @@ nunit: {
         // folder must be in the system path.
         path: 'c:/Program Files/NUnit/bin',
 
+        // When uses NUnit version 3.x this setting must be set true.
+        // When true, nodots is automatically setted as false.
+        nunit3: true|false,
+
         // Runs the anycpu or x86 build of NUnit. Default is anycpu.
         // http://www.nunit.org/index.php?p=nunit-console&r=2.6.3
         platform: 'anycpu|x86',
@@ -122,6 +126,7 @@ nunit: {
         nologo: true|false,
 
         // Do not display progress.
+        // Do not works with NUnit3.
         nodots: true|false,
 
         // Stop after the first test failure or error.
