@@ -37,7 +37,9 @@ exports.findTestAssemblies = function(files, options) {
 
 exports.buildCommand = function(assemblies, options) {
 
-    var nunit = options.platform === 'x86' ? 'nunit-console-x86.exe' : 'nunit-console.exe';
+    var nunit = options.nunit3 ? 'nunit3-console.exe' :
+				options.platform === 'x86' ? 'nunit-console-x86.exe' : 'nunit-console.exe';
+				
     if (options.path) nunit = path.join(options.path, nunit);
 
     nunit = nunit.replace(/\\/g, path.sep);
